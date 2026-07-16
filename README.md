@@ -247,3 +247,4 @@ task-manager/
 - **Configuración externalizada**: credenciales de BD y clave JWT fuera del código fuente, vía variables de entorno.
 # Taskmanager
 # Taskmanager
+# Taskmanager
