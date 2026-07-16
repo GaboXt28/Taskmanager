@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(${formTitle})}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="page-header text-white">
+    <div class="container">
+        <h1 class="h3 fw-bold mb-1">
+            <i class="fas fa-edit me-2" th:if="${isEdit}"></i>
+            <i class="fas fa-plus-circle me-2" th:unless="${isEdit}"></i>
+            <span th:text="${formTitle}">Tarea</span>
+        </h1>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a th:href="@{/}" class="text-white-50">Inicio</a></li>
+                <li class="breadcrumb-item"><a th:href="@{/tasks}" class="text-white-50">Tareas</a></li>
+                <li class="breadcrumb-item active text-white" th:text="${formTitle}">Formulario</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="container py-4 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-formulario border-0 shadow-sm">
+                <div class="card-header py-3">
+                    <h5 class="mb-0 text-white fw-semibold">
+                        <i class="fas fa-tasks me-2"></i><span th:text="${formTitle}">Formulario</span>
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+
+                    <form th:action="${isEdit} ? @{/tasks/editar/{id}(id=${task.id})} : @{/tasks/nueva}"
+                          method="post" th:object="${task}" novalidate>
+
+                        <div class="row g-3">
+                            <!-- Título -->
+                            <div class="col-12">
+                                <label for="title" class="form-label fw-semibold">
+                                    <i class="fas fa-heading me-1 text-muted"></i>Título <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="title" th:field="*{title}"
+                                       class="form-control" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'"
+                                       placeholder="Ej: Implementar módulo de autenticación" maxlength="120" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                            </div>
+
+                            <!-- Descripción -->
+                            <div class="col-12">
+                                <label for="description" class="form-label fw-semibold">
+                                    <i class="fas fa-align-left me-1 text-muted"></i>Descripción
+                                </label>
+                                <textarea id="description" th:field="*{description}"
+                                          class="form-control" rows="3"
+                                          placeholder="Detalla el alcance de la tarea..." maxlength="500"></textarea>
+                                <div class="form-text text-end"><span id="charCount">0</span>/500</div>
+                            </div>
+
+                            <!-- Fecha vencimiento -->
+                            <div class="col-md-4">
+                                <label for="dueDate" class="form-label fw-semibold">
+                                    <i class="fas fa-calendar-alt me-1 text-muted"></i>Fecha de Vencimiento <span class="text-danger">*</span>
+                                </label>
+                                <input type="date" id="dueDate" th:field="*{dueDate}"
+                                       class="form-control" th:classappend="${#fields.hasErrors('dueDate')} ? 'is-invalid'"
+                                       th:min="${#temporals.format(T(java.time.LocalDate).now(), 'yyyy-MM-dd')}" required>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('dueDate')}" th:errors="*{dueDate}"></div>
+                            </div>
+
+                            <!-- Prioridad -->
+                            <div class="col-md-4">
+                                <label for="priority" class="form-label fw-semibold">
+                                    <i class="fas fa-flag me-1 text-muted"></i>Prioridad <span class="text-danger">*</span>
+                                </label>
+                                <select id="priority" th:field="*{priority}"
+                                        class="form-select" th:classappend="${#fields.hasErrors('priority')} ? 'is-invalid'" required>
+                                    <option value="">-- Seleccionar --</option>
+                                    <option th:each="p : ${prioridades}" th:value="${p.name()}" th:text="${p.displayName}">Prioridad</option>
+                                </select>
+                                <div class="invalid-feedback" th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}"></div>
+                            </div>
+
+                            <!-- Estado (solo en edición) -->
+                            <div class="col-md-4" th:if="${isEdit}">
+                                <label for="status" class="form-label fw-semibold">
+                                    <i class="fas fa-circle me-1 text-muted"></i>Estado
+                                </label>
+                                <select id="status" th:field="*{status}" class="form-select">
+                                    <option th:each="e : ${estados}" th:value="${e.name()}" th:text="${e.displayName}">Estado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex gap-2 justify-content-end">
+                            <a th:href="@{/tasks}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-primary fw-bold">
+                                <i class="fas fa-save me-1"></i>
+                                <span th:text="${isEdit} ? 'Guardar Cambios' : 'Registrar Tarea'">Guardar</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script>
+const desc = document.getElementById('description');
+const cnt  = document.getElementById('charCount');
+const upd  = () => cnt.textContent = desc.value.length;
+desc.addEventListener('input', upd); upd();
+</script>
+</body>
+</html>

@@ -1,0 +1,233 @@
+/* ============================================================
+   TaskManager - PrymEvolution | Estilos Personalizados
+   ============================================================ */
+
+:root {
+    --color-primario: #2c3e50;
+    --color-secundario: #3498db;
+    --color-exito: #27ae60;
+    --color-peligro: #e74c3c;
+    --color-advertencia: #f39c12;
+    --color-fondo: #f4f6f9;
+    --color-texto: #2c3e50;
+    --color-texto-claro: #7f8c8d;
+    --color-borde: #dee2e6;
+}
+
+/* ============================================================
+   Global
+   ============================================================ */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+/* ============================================================
+   Navbar
+   ============================================================ */
+.navbar {
+    background-color: var(--color-primario) !important;
+}
+
+.navbar-brand i {
+    color: var(--color-advertencia);
+}
+
+/* ============================================================
+   Page Header
+   ============================================================ */
+.page-header {
+    background: linear-gradient(135deg, var(--color-primario) 0%, var(--color-secundario) 100%);
+    padding: 2rem 0;
+    margin-bottom: 0;
+}
+
+/* ============================================================
+   Cards de resumen
+   ============================================================ */
+.card-resumen {
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card-resumen:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12) !important;
+}
+
+.icono-resumen {
+    width: 52px;
+    height: 52px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.card-resumen h3 {
+    font-weight: 700;
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+/* ============================================================
+   Card Formulario
+   ============================================================ */
+.card-formulario {
+    border-radius: 12px;
+}
+
+.card-formulario .card-header,
+.card-tabla .card-header {
+    background-color: var(--color-primario);
+    border-radius: 12px 12px 0 0 !important;
+}
+
+/* ============================================================
+   Card Tabla
+   ============================================================ */
+.card-tabla {
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.table thead {
+    background-color: var(--color-primario);
+}
+
+.table thead th {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    border: none;
+    padding: 12px 14px;
+}
+
+.table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(52, 152, 219, 0.06);
+}
+
+.table tbody td {
+    vertical-align: middle;
+    border-color: var(--color-borde);
+    padding: 12px 14px;
+}
+
+/* ============================================================
+   Badges de prioridad
+   ============================================================ */
+.badge-alta {
+    background-color: var(--color-peligro);
+    color: #fff;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+    font-size: 0.78rem;
+}
+
+.badge-media {
+    background-color: var(--color-advertencia);
+    color: #fff;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+    font-size: 0.78rem;
+}
+
+.badge-baja {
+    background-color: var(--color-exito);
+    color: #fff;
+    padding: 0.35em 0.65em;
+    border-radius: 6px;
+    font-size: 0.78rem;
+}
+
+/* ============================================================
+   Botones de acción en tabla
+   ============================================================ */
+.btn-accion {
+    padding: 4px 10px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+}
+
+/* ============================================================
+   Inputs y selects
+   ============================================================ */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--color-secundario);
+    box-shadow: 0 0 0 0.15rem rgba(52, 152, 219, 0.25);
+}
+
+.form-label {
+    font-weight: 600;
+    font-size: 0.88rem;
+}
+
+/* ============================================================
+   Modal
+   ============================================================ */
+.modal-content {
+    border: none;
+    border-radius: 14px;
+}
+
+/* ============================================================
+   Footer
+   ============================================================ */
+.footer {
+    background-color: var(--color-primario);
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.85rem;
+}
+
+.footer-link {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: var(--color-advertencia);
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 991.98px) {
+    .page-header h1 {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .page-header {
+        padding: 1.5rem 0;
+    }
+
+    .page-header h1 {
+        font-size: 1.2rem;
+    }
+
+    .card-resumen h3 {
+        font-size: 1.4rem;
+    }
+
+    .table thead th {
+        font-size: 0.75rem;
+        padding: 8px 10px;
+    }
+
+    .table tbody td {
+        font-size: 0.82rem;
+        padding: 8px 10px;
+    }
+}

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/head :: head('Panel de Administración')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/navbar :: navbar}"></nav>
+
+<div class="page-header text-white">
+    <div class="container">
+        <h1 class="h3 fw-bold mb-1"><i class="fas fa-shield-halved me-2"></i>Panel de Administración</h1>
+        <p class="mb-0 opacity-75">Vista global del sistema — solo administradores</p>
+    </div>
+</div>
+
+<div class="container py-4 flex-grow-1">
+
+    <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+    <!-- Métricas globales -->
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-lg-3">
+            <div class="card card-resumen border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="icono-resumen bg-primary bg-opacity-10 text-primary"><i class="fas fa-users"></i></div>
+                    <div><h3 class="mb-0 fw-bold" th:text="${totalUsuarios}">0</h3><p class="mb-0 text-muted small">Usuarios</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card card-resumen border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="icono-resumen bg-secondary bg-opacity-10 text-secondary"><i class="fas fa-tasks"></i></div>
+                    <div><h3 class="mb-0 fw-bold" th:text="${totalTasks}">0</h3><p class="mb-0 text-muted small">Tareas</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card card-resumen border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="icono-resumen bg-info bg-opacity-10 text-info"><i class="fas fa-spinner"></i></div>
+                    <div><h3 class="mb-0 fw-bold" th:text="${enProgreso}">0</h3><p class="mb-0 text-muted small">En Progreso</p></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 col-lg-3">
+            <div class="card card-resumen border-0 shadow-sm h-100">
+                <div class="card-body d-flex align-items-center gap-3">
+                    <div class="icono-resumen bg-success bg-opacity-10 text-success"><i class="fas fa-check-circle"></i></div>
+                    <div><h3 class="mb-0 fw-bold" th:text="${completadas}">0</h3><p class="mb-0 text-muted small">Completadas</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Tabla usuarios -->
+        <div class="col-12 col-xl-4">
+            <div class="card card-tabla border-0 shadow-sm">
+                <div class="card-header py-3">
+                    <h5 class="mb-0 text-white fw-semibold"><i class="fas fa-users me-2"></i>Usuarios</h5>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead><tr><th>#</th><th>Usuario</th><th>Rol</th><th class="text-center">Acción</th></tr></thead>
+                        <tbody>
+                            <tr th:each="u, i : ${usuarios}">
+                                <td class="text-muted" th:text="${i.count}">1</td>
+                                <td>
+                                    <div class="fw-semibold" th:text="${u.username}">usuario</div>
+                                    <small class="text-muted" th:text="${u.email}">email</small>
+                                </td>
+                                <td>
+                                    <span th:if="${u.role.name() == 'ADMIN'}" class="badge bg-danger">ADMIN</span>
+                                    <span th:unless="${u.role.name() == 'ADMIN'}" class="badge bg-secondary">USER</span>
+                                </td>
+                                <td class="text-center">
+                                    <form th:if="${u.username != 'admin'}"
+                                          th:action="@{/admin/usuarios/{id}/eliminar(id=${u.id})}" method="post"
+                                          onsubmit="return confirm('¿Eliminar usuario ' + /*[[${u.username}]]*/ '' + '?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-accion" title="Eliminar">
+                                            <i class="fas fa-user-times"></i>
+                                        </button>
+                                    </form>
+                                    <span th:if="${u.username == 'admin'}" class="text-muted small">—</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabla tareas -->
+        <div class="col-12 col-xl-8">
+            <div class="card card-tabla border-0 shadow-sm">
+                <div class="card-header py-3 d-flex align-items-center justify-content-between">
+                    <h5 class="mb-0 text-white fw-semibold"><i class="fas fa-tasks me-2"></i>Todas las Tareas</h5>
+                    <span class="badge bg-warning text-dark" th:text="${totalTasks} + ' tareas'">0 tareas</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Usuario</th>
+                                <th>Vencimiento</th>
+                                <th>Prioridad</th>
+                                <th>Estado</th>
+                                <th class="text-center">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="t : ${tasks}">
+                                <td class="small">
+                                    <div class="fw-semibold" th:text="${#strings.abbreviate(t.title, 35)}">Título</div>
+                                    <small class="text-muted"
+                                           th:if="${t.description != null}"
+                                           th:text="${#strings.abbreviate(t.description, 30)}"></small>
+                                </td>
+                                <td class="small text-muted" th:text="${t.user.username}">user</td>
+                                <td class="small" th:text="${#temporals.format(t.dueDate, 'dd/MM/yyyy')}">—</td>
+                                <td>
+                                    <span th:class="'badge badge-' + ${t.priority.name().toLowerCase()}"
+                                          th:text="${t.priority.displayName}">Media</span>
+                                </td>
+                                <td>
+                                    <span th:switch="${t.status.name()}">
+                                        <span th:case="'PENDIENTE'"   class="badge bg-warning text-dark">Pendiente</span>
+                                        <span th:case="'EN_PROGRESO'" class="badge bg-info">En Progreso</span>
+                                        <span th:case="'COMPLETADA'"  class="badge bg-success">Completada</span>
+                                    </span>
+                                </td>
+                                <td class="text-center">
+                                    <form th:action="@{/admin/tasks/{id}/eliminar(id=${t.id})}" method="post"
+                                          onsubmit="return confirm('¿Eliminar la tarea \"' + /*[[${t.title}]]*/ '' + '\"?')">
+                                        <button type="submit" class="btn btn-outline-danger btn-accion" title="Eliminar">
+                                            <i class="fas fa-trash-alt"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
