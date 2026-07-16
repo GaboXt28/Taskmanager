@@ -246,3 +246,4 @@ task-manager/
 - **BCrypt**: almacenamiento seguro de contraseñas, con factor de coste 10.
 - **Configuración externalizada**: credenciales de BD y clave JWT fuera del código fuente, vía variables de entorno.
 # Taskmanager
+# Taskmanager
